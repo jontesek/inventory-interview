@@ -3,6 +3,7 @@ import json
 import requests
 
 from ..api.schemas import InventoryResponse, ProductResponse
+from ..settings import EXTRA_FIELD_1_KEY, EXTRA_FIELD_2_KEY, PRICE_GROUP
 
 
 class BaselinkerClient:
@@ -41,9 +42,9 @@ class BaselinkerClient:
         products = []
         for product_id, product in response["products"].items():
             name = product["text_fields"]["name"]
-            extra_1 = product["text_fields"].get("extra_field_467")
-            extra_2 = product["text_fields"].get("extra_field_484")
-            price = product["prices"]["849"]
+            extra_1 = product["text_fields"].get(EXTRA_FIELD_1_KEY)
+            extra_2 = product["text_fields"].get(EXTRA_FIELD_2_KEY)
+            price = product["prices"][PRICE_GROUP]
             _item = ProductResponse(
                 id=product_id,
                 sku=product["sku"],
@@ -56,6 +57,24 @@ class BaselinkerClient:
             products.append(_item)
 
         return products
+
+    def update_product(
+        self, inventory_id: int, product_id: int, extra_field_2_value: str
+    ) -> dict:
+        text_fields = {EXTRA_FIELD_2_KEY: extra_field_2_value}
+        params = {
+            "inventory_id": inventory_id,
+            "product_id": product_id,
+            "text_fields": text_fields,
+        }
+        data = {"method": "addInventoryProduct", "parameters": json.dumps(params)}
+        response = self.session.post(self.api_url, data=data, headers=self.headers)
+        response = response.json()
+
+        if response["status"] == "SUCCESS":
+            return {"error": None}
+        else:
+            return {"error": response["error_message"]}
 
 
 if __name__ == "__main__":

@@ -16,20 +16,7 @@ class ProductResponse(BaseModel):
     extra_field_2: str | None
 
 
-# class OrderCreate(BaseModel):
-#     client_id: int
-#     contact_phone: str
-#     note_for_driver: str | None
-#     order_items: list[OrderItemCreate]
-
-
-# class OrderCreate(BaseModel):
-#     client_id: int
-#     contact_phone: str
-#     note_for_driver: str | None
-#     order_items: list[OrderItemCreate]
-
-
-# class OrderCreateResponse(BaseModel):
-#     id: int
-#     email: str
+class ProductUpdate(BaseModel):
+    inventory_id: int
+    product_id: int
+    extra_field_2: str

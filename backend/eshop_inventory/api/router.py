@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from ..clients.baselinker import BaselinkerClient
 from ..clients.dependencies import get_baselinker_client
-from .schemas import InventoryResponse
+from .schemas import InventoryResponse, ProductUpdate
 
 router = APIRouter(prefix="/api")
 
@@ -23,34 +23,17 @@ def get_client(
     return base_client.get_products_data(inventory_id, product_ids)
 
 
-# @router.post("/orders", response_model=OrderCreateResponse)
-# def create_order(
-#     data: OrderCreate,
-#     db: Session = Depends(get_db),
-#     mailer: Mailer = Depends(get_mailer),
-# ):
-#     repo = OrderRepository(db)
+@router.put("/products", response_model=dict)
+def create_order(
+    data: ProductUpdate,
+    base_client: BaselinkerClient = Depends(get_baselinker_client),
+):
+    response = base_client.update_product(
+        data.inventory_id, data.product_id, data.extra_field_2
+    )
+    error_msg = response.get("error")
 
-#     # Save to DB
-#     try:
-#         resp = repo.create_order(data)
-#     except EntityNotFoundError as e:
-#         raise HTTPException(status_code=404, detail=str(e)) from e
-#     except OrderPiecesError as e:
-#         raise HTTPException(status_code=422, detail=str(e)) from e
+    if error_msg:
+        raise HTTPException(status_code=400, detail=error_msg)
 
-#     # Send email confirmation
-#     conf = create_order_confirmation(resp)
-#     try:
-#         mailer.send_email(
-#             to=resp["client_email"],
-#             subject=conf["subject"],
-#             message_text=conf["message"],
-#         )
-#     except Exception as e:
-#         msg = "Could not send order confirmation email, transaction aborted."
-#         raise HTTPException(status_code=500, detail=msg) from e
-
-#     db.commit()
-
-#     return OrderCreateResponse(id=resp["order_id"], email=resp["client_email"])
+    return {"status": "success"}
