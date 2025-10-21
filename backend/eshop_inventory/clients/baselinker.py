@@ -1,6 +1,8 @@
+import json
+
 import requests
 
-from ..api.schemas import InventoryResponse
+from ..api.schemas import InventoryResponse, ProductResponse
 
 
 class BaselinkerClient:
@@ -21,10 +23,46 @@ class BaselinkerClient:
             inventories.append(_item)
         return inventories
 
+    def get_product_ids(self, inventory_id: int) -> list[int]:
+        params = {"inventory_id": inventory_id}
+        data = {"method": "getInventoryProductsList", "parameters": json.dumps(params)}
+        response = self.session.post(self.api_url, data=data, headers=self.headers)
+        response = response.json()
+        return [product["id"] for product in response["products"].values()]
+
+    def get_products_data(
+        self, inventory_id: int, product_ids: list[int]
+    ) -> list[ProductResponse]:
+        params = {"inventory_id": inventory_id, "products": product_ids}
+        data = {"method": "getInventoryProductsData", "parameters": json.dumps(params)}
+        response = self.session.post(self.api_url, data=data, headers=self.headers)
+        response = response.json()
+
+        products = []
+        for product_id, product in response["products"].items():
+            name = product["text_fields"]["name"]
+            extra_1 = product["text_fields"].get("extra_field_467")
+            extra_2 = product["text_fields"].get("extra_field_484")
+            price = product["prices"]["849"]
+            _item = ProductResponse(
+                id=product_id,
+                sku=product["sku"],
+                ean=product["ean"],
+                name=name,
+                extra_field_1=extra_1,
+                extra_field_2=extra_2,
+                price=price,
+            )
+            products.append(_item)
+
+        return products
+
 
 if __name__ == "__main__":
     from ..settings import API_TOKEN, API_URL
 
     client = BaselinkerClient(API_URL, API_TOKEN)
-    result = client.get_inventories()
+    result = client.get_product_ids(833)
+    # result = client.get_products_data(833, [2303989, 9556512])
     print(result)
+    print(len(result))

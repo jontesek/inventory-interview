@@ -14,6 +14,15 @@ def get_inventories(
     return base_client.get_inventories()
 
 
+@router.get("/inventory-products/{inventory_id}", response_model=[])
+def get_client(
+    inventory_id: int,
+    base_client: BaselinkerClient = Depends(get_baselinker_client),
+):
+    product_ids = base_client.get_product_ids(inventory_id)
+    return base_client.get_products_data(inventory_id, product_ids)
+
+
 # @router.post("/orders", response_model=OrderCreateResponse)
 # def create_order(
 #     data: OrderCreate,
@@ -45,17 +54,3 @@ def get_inventories(
 #     db.commit()
 
 #     return OrderCreateResponse(id=resp["order_id"], email=resp["client_email"])
-
-
-# @router.get("/clients/{client_id}", response_model=OrderClientResponse)
-# def get_client(
-#     client_id: int,
-#     db: Session = Depends(get_db),
-# ):
-#     repo = ClientRepository(db)
-#     resp = repo.get_client(client_id)
-
-#     if not resp:
-#         raise HTTPException(status_code=404, detail="Client not found")
-
-#     return resp
