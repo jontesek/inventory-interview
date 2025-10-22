@@ -10,7 +10,19 @@ App for listing and editing of products from eshop inventory
 
 ## Description
 
-The app is split into two parts:
+### Action flow
+Show products:
+1. Request products in Inventory - save product ids
+2. Request product details for all ids
+3. Show all info in table
+
+Edit product:
+1. Click on edit button
+2. Update value
+3. Click on save button
+4. Data is saved to API and updated reactively in UI
+
+### App structure
 
 * Backend: Written in Python, using FastAPI. It communicates with the Baselinker API.
 * Frontend: Written in Javascript, using Vue.js. It communicates with the Backend API.
@@ -19,5 +31,6 @@ When run with Docker, the frontend is served by Nginx server.
 
 ## TODO
 
-* FE: Choose Inventory ID
+* UI: Choose Inventory ID
 * Authentication (for frontend and backend)
+* Product price: Select default price group from API (now hardcoded)
