@@ -6,7 +6,7 @@ App for listing and editing of products from eshop inventory
 1. Create `.env` file containing `API_TOKEN` variable (see [template.env](./template.env) for example).
 2. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 3. Run `docker-compose up` command (in root dir, wait for finish)
-4. See the app: http://localhost:5000/products 
+4. See the app: http://localhost:10000/products 
 
 ## Description
 
