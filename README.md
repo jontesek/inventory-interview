@@ -16,3 +16,8 @@ The app is split into two parts:
 * Frontend: Written in Javascript, using Vue.js. It communicates with the Backend API.
 
 When run with Docker, the frontend is served by Nginx server.
+
+## TODO
+
+* FE: Choose Inventory ID
+* Authentication (for frontend and backend)
