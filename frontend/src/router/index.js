@@ -8,8 +8,8 @@ const router = createRouter({
     {
       path: '/products',
       name: 'products-view',
-      component: ProductsView
-    }
+      component: ProductsView,
+    },
   ],
 })
 

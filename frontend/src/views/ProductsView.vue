@@ -15,7 +15,7 @@
           <th scope="col">Price</th>
           <th scope="col">Extra Field 1</th>
           <th scope="col">Extra Field 2</th>
-          <th scope="col">Actions</th>
+          <th scope="col">Akce</th>
         </tr>
       </thead>
       <tbody>
@@ -29,17 +29,23 @@
           <td>
             <div v-if="showEditFieldId === product.id">
               <input type="text" v-model="editedFieldsValue[product.id]" />
-              <button type="button" @click="saveEdit(product.id)" class="btn btn-secondary ms-2">Uložit</button>
-              <button type="button" @click="cancelEdit" class="btn btn-secondary ms-2">Zrušit</button>
+              <button type="button" @click="saveEdit(product.id)" class="btn btn-secondary ms-2">
+                Uložit
+              </button>
+              <button type="button" @click="cancelEdit" class="btn btn-secondary ms-2">
+                Zrušit
+              </button>
             </div>
             <div v-else>{{ product.extra_field_2 }}</div>
           </td>
-          <td><button type="button" @click="showEditFieldClick(product.id)" class="btn btn-secondary ms-2">Upravit</button></td>
+          <td>
+            <button type="button" @click="showEditFieldClick(product.id)" class="btn btn-secondary ms-2">
+              Upravit
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
-
-
   </div>
 </template>
 
@@ -47,11 +53,11 @@
 import { ref, onMounted } from 'vue'
 
 // References
-const INVENTORY_ID = 833;
+const INVENTORY_ID = 833
 const loadProductsError = ref(null)
 const products = ref([])
-const showEditFieldId = ref(null);
-const editedFieldsValue = ref({});
+const showEditFieldId = ref(null)
+const editedFieldsValue = ref({})
 
 // Init page load
 onMounted(async () => {
@@ -63,45 +69,44 @@ const loadProducts = async (inventoryId) => {
   const response = await fetch(`/api/inventory-products/${inventoryId}`)
   if (response.status != 200) {
     loadProductsError.value = true
-    return
+    return;
   }
   const result = await response.json()
   products.value = result
 }
 
 const showEditFieldClick = (productId) => {
-  showEditFieldId.value = productId;
-  const product = products.value.find(p => p.id === productId);
-  editedFieldsValue.value[productId] = product?.extra_field_2 || '';
+  showEditFieldId.value = productId
+  const product = products.value.find((p) => p.id === productId)
+  editedFieldsValue.value[productId] = product?.extra_field_2 || ''
 }
 
 const saveEdit = async (productId) => {
-  const index = products.value.findIndex(p => p.id === productId);
+  const index = products.value.findIndex((p) => p.id === productId)
   if (index !== -1) {
     // Get value
-    const newValue = editedFieldsValue.value[productId];
+    const newValue = editedFieldsValue.value[productId]
     // Send to server
-    const payload = { "inventory_id": INVENTORY_ID, "product_id": productId, "extra_field_2": newValue }
+    const payload = { inventory_id: INVENTORY_ID, product_id: productId, extra_field_2: newValue }
     const response = await fetch('/api/products', {
       method: 'PUT',
       body: JSON.stringify(payload),
       headers: { 'Content-Type': 'application/json' },
-    });
+    })
     if (response.status !== 200) {
-      const error = response.text
-      alert(`Nepodařilo se aktualizovat pole. Chyba: ${error}`)
+      const error = await response.text()
+      alert(`Nepodařilo se aktualizovat pole. Chyba ${response.status}: ${error}`)
       return;
     }
     // Update locally
     products.value[index].extra_field_2 = newValue
   }
-  showEditFieldId.value = null;
+  showEditFieldId.value = null
 }
 
 const cancelEdit = () => {
-  showEditFieldId.value = null;
+  showEditFieldId.value = null
 }
-
 </script>
 
 <style scoped></style>
