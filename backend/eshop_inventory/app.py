@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 
 from .api.router import router
 from .logs import get_logger
@@ -15,19 +15,8 @@ app = FastAPI(
 )
 logger.debug("FastAPI app created")
 
-
-# For Https redirect error on Prod
-@app.middleware("http")
-async def patch_scheme_from_proxy(request: Request, call_next):
-    forwarded_proto = request.headers.get("x-forwarded-proto")
-    if forwarded_proto:
-        request.scope["scheme"] = forwarded_proto
-    return await call_next(request)
-
-
 # Add API routes
 app.include_router(router)
-
 logger.debug("FastAPI routers added")
 
 # For local debugging
