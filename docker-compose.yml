@@ -3,7 +3,7 @@ services:
     build:
       context: frontend/
       args:
-        BACKEND_API_HOST: backend:8000
+        BACKEND_API_URL: http://backend:8000/api/
     ports:
       - "10000:10000"
     depends_on:
