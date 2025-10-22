@@ -37,3 +37,8 @@ def create_order(
         raise HTTPException(status_code=400, detail=error_msg)
 
     return {"status": "success"}
+
+
+@router.get("/health", response_model=dict)
+def health_check():
+    return {"status": "ok"}

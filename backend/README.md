@@ -4,7 +4,7 @@ Venv is managed by [UV](https://docs.astral.sh/uv/).
 
 You can run API with: 
 
-`uv run --env-file .env -m eshop_inventory.app`
+`uv run --env-file ../.env -m eshop_inventory.app`
 
 ## Development
 
