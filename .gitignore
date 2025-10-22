@@ -1,0 +1,11 @@
+# MacOS
+.DS_Store
+
+# Env file
+.env
+
+# Editor
+.vscode/
+
+# Python
+.ruff_cache
