@@ -3,9 +3,10 @@ services:
     build:
       context: frontend/
       args:
-        BACKEND_API_URL: http://backend:8000/api/
+        BACKEND_HOST: backend:8000
+        NGINX_CONF: nginx.local.conf
     ports:
-      - "10000:10000"
+      - "5000:5000"
     depends_on:
       - backend
     # command: ["sh", "-c", "sleep infinity"]
@@ -19,3 +20,4 @@ services:
     environment:
       - ENVIRONMENT=local
       - API_TOKEN=${API_TOKEN}  # from .env file
+      - BACKEND_PORT=8000
