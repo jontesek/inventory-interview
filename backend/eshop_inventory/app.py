@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 
 from .api.router import router
 from .logs import get_logger
-from .settings import IS_LOCAL
+from .settings import BACKEND_PORT, IS_LOCAL
 
 # Setup app
 is_debug = IS_LOCAL
@@ -34,4 +34,4 @@ logger.debug("FastAPI routers added")
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)  # noqa: S104
+    uvicorn.run(app, host="0.0.0.0", port=BACKEND_PORT)  # noqa: S104
