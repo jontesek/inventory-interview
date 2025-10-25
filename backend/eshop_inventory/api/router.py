@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from ..clients.baselinker import BaselinkerClient
 from ..clients.dependencies import get_baselinker_client
-from .schemas import InventoryResponse, ProductUpdate
+from .schemas import InventoryResponse, ProductResponse, ProductUpdate
 
 router = APIRouter(prefix="/api")
 
@@ -14,7 +14,7 @@ def get_inventories(
     return base_client.get_inventories()
 
 
-@router.get("/inventory-products/{inventory_id}", response_model=[])
+@router.get("/inventory-products/{inventory_id}", response_model=[ProductResponse])
 def get_client(
     inventory_id: int,
     base_client: BaselinkerClient = Depends(get_baselinker_client),
