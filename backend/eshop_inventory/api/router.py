@@ -14,7 +14,7 @@ def get_inventories(
     return base_client.get_inventories()
 
 
-@router.get("/inventory-products/{inventory_id}", response_model=[ProductResponse])
+@router.get("/inventory-products/{inventory_id}", response_model=list[ProductResponse])
 def get_client(
     inventory_id: int,
     base_client: BaselinkerClient = Depends(get_baselinker_client),
